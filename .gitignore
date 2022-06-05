@@ -8,7 +8,6 @@ db.sqlite3
 .idea
 /media
 uwsgi.ini
-wsgi.py
 uwsgi.py
 /log
 
