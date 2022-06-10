@@ -24,4 +24,5 @@ urlpatterns = [
     path('face/', include('face_recog.urls'), name='face'),
     path('board/', include("board.urls"), name='board'),
     path('calendars/', include("calendars.urls"), name='calendars'),
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    path('notice/', include("notice.urls"), name="notice")
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
