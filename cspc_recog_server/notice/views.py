@@ -5,7 +5,7 @@ from notice.models import Notice
 from notice.serializers import NoticeSerializer
 
 
-class NoticeView(APIView):
+class NoticeAPI(APIView):
     def get(self, request, **kwargs):
         profile_id = kwargs.get('profile_id')
         if profile_id is None:
