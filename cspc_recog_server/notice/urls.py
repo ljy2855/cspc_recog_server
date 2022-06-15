@@ -4,5 +4,6 @@ from .views import *
 app_name = 'notice'
 
 urlpatterns = [
-    path('<int:profile_id>', NoticeAPI.as_view())
+    path('profile=<int:profile_id>', NoticeListAPI.as_view()),
+    path('id=<int:notice_id>/', NoticeAPI.as_view())
 ]

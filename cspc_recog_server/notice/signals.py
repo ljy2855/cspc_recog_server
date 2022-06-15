@@ -23,6 +23,7 @@ def board_notice(sender, instance, created, **kwargs):
                     notice_type=NoticeType.NEW_POST,
                     title=notice_title,
                     content=notice_content,
+                    related_post=post,
                 )
 
 # 댓글 작성시 원글 작성자에게 알림
@@ -41,4 +42,5 @@ def comment_notice(sender, instance, created, **kwargs):
                 notice_type=NoticeType.COMMENT,
                 title=notice_title,
                 content=notice_content,
+                related_post=comment.post_id,
             )
