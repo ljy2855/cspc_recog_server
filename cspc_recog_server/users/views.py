@@ -2,11 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import ProfileSerializer
-from rest_framework import status , permissions, generics, status
+from rest_framework import status, permissions, generics, status
 from knox.models import AuthToken
 from .serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, ProfileSerializer, GroupSerializer
 from .models import Profile, Group
 from django.utils.datastructures import MultiValueDictKeyError
+
 
 class UserView(APIView):
     def get(self, request, **kwargs):
@@ -18,9 +19,10 @@ class UserView(APIView):
         else:
             profile_id = kwargs.get('profile_id')
             profile_serializer = ProfileSerializer(
-                get_object_or_404(Profile, id = profile_id))
+                get_object_or_404(Profile, id=profile_id))
             return Response(profile_serializer.data, status=200)
             # user 개인 정보 get
+
 
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = CreateUserSerializer
@@ -38,7 +40,6 @@ class RegistrationAPI(generics.GenericAPIView):
                 "token": AuthToken.objects.create(user)[1],
             }
         )
-
 
 
 class LoginAPI(generics.GenericAPIView):
@@ -70,23 +71,25 @@ class UserAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+
 class ProfileAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         profile_list = ProfileSerializer(
-                Profile.objects.filter(user_id = request.data["user_id"]), many=True)
+            Profile.objects.filter(user_id=request.data["user_id"]), many=True)
         return Response(profile_list.data, status=200)
 
 
 class GroupAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         group_list = GroupSerializer(
-                Group.objects.filter(group_admin_id = request.data["user_id"]), many=True)
+            Group.objects.filter(group_admin_id=request.data["user_id"]), many=True)
         return Response(group_list.data, status=200)
 
 
 class ProfileCreateAPI(generics.CreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
 
 class GroupCreateAPI(generics.CreateAPIView):
     queryset = Group.objects.all()
@@ -98,7 +101,7 @@ class ProfileUpdateAPI(generics.UpdateAPIView):
     def post(self, request, **kwargs):
         try:
             profile_id = kwargs.get('profile_id')
-            profile = Profile.objects.get(id = profile_id)
+            profile = Profile.objects.get(id=profile_id)
             profile.nick_name = request.data['newNickName']
             image = request.FILES['profileImage']
             profile.profile_image = image
@@ -106,27 +109,29 @@ class ProfileUpdateAPI(generics.UpdateAPIView):
         except MultiValueDictKeyError:
             profile.save()
 
-        return Response( status=200)
-        
+        return Response(status=200)
+
 
 class GroupUpdateAPI(generics.UpdateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+
 class ProfileAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         profile_list = ProfileSerializer(
-                Profile.objects.filter(user_id = request.data["user_id"]), many=True)
+            Profile.objects.get(user_id=request.data["user_id"]))
         return Response(
             {
                 "profile": profile_list.data,
             }
         )
 
+
 class GroupAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         group_list = GroupSerializer(
-                Group.objects.filter(group_admin_id = request.data["user_id"]), many=True)
+            Group.objects.filter(group_admin_id=request.data["user_id"]), many=True)
         return Response(
             {
                 "Group": group_list.data,
